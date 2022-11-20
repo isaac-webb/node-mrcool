@@ -229,26 +229,28 @@ async function pingSocket(applicationCookies, agent) {
 async function negotiate(username, password, ip, agent) {
     return getApplicationCookies(username, password, ip, agent)
         .then(applicationCookies => {
-            return Promise.all([
-                getAppUserAndSessionId(applicationCookies, agent),
-                getAccessCredentials(username, applicationCookies, agent)
-            ]).then(promiseResults => {
-                [[appUser, sessionId], accessCredentials] = promiseResults;
-                return getDeviceInfo(sessionId, appUser, accessCredentials, agent)
-                    .then(deviceInfo => {
-                        // FIXME: Assumes only one device.
-                        const device = deviceInfo.data.listDevices[0];
-                        return negotiateSocketInfo(applicationCookies, agent)
-                            .then(socketInfo => {
-                                return {
-                                    'sessionId': sessionId,
-                                    'applicationCookies': applicationCookies,
-                                    'socketInfo': socketInfo,
-                                    'device': device
-                                };
-                            })
-                    });
-            });
+            return getAppUserAndSessionId(applicationCookies, agent)
+                .then(sessionData => {
+                    [appUser, sessionId] = sessionData;
+                    return getAccessCredentials(appUser["userID"], applicationCookies, agent)
+                        .then(promiseResults => {
+                            accessCredentials = promiseResults;
+                            return getDeviceInfo(sessionId, appUser, accessCredentials, agent)
+                                .then(deviceInfo => {
+                                    // FIXME: Assumes only one device.
+                                    const device = deviceInfo.data.listDevices[0];
+                                    return negotiateSocketInfo(applicationCookies, agent)
+                                        .then(socketInfo => {
+                                            return {
+                                                'sessionId': sessionId,
+                                                'applicationCookies': applicationCookies,
+                                                'socketInfo': socketInfo,
+                                                'device': device
+                                            };
+                                        })
+                            });
+                        });
+                });
         }).catch(err => {
             return Promise.reject(err);
         });
