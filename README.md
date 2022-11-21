@@ -31,7 +31,7 @@ $ npm install node-mrcool
 ### Sample Code Execution
 
 ```bash
-$ node index.js -u <username> -p <password> -i <ip_address> [-v]
+$ node demo.js -u <username> -p <password> -i <ip_address> [-v]
 ```
 
 ## References
