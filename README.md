@@ -37,7 +37,7 @@ $ node index.js -u <username> -p <password> -i <ip_address> [-v]
 ## References
     
 * [MrCool](https://www.mrcool.com/)
-* [SmartCielo](https://www.smartcielo.com)
+* [SmartCielo](https://home.cielowigle.com/)
 
 ## Notes
 

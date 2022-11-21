@@ -2,8 +2,6 @@
   "name": "node-mrcool",
   "version": "1.0.0",
   "description": "NodeJS interface for the SmartCielo remote AC control API used by MrCool minisplits",
-  "main": "MrCool.js",
-  "type": "module",
   "dependencies": {
     "https-proxy-agent": "^5.0.0",
     "node-fetch": "^2.6.1",

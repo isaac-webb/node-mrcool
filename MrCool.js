@@ -1,8 +1,8 @@
-import querystring from 'querystring';
-import fetch from 'node-fetch';
-import HTMLParser from 'node-html-parser';
-import CryptoJS from 'crypto-js';
-import WebSocket from 'ws';
+const querystring = require('querystring');
+const fetch = require('node-fetch');
+const HTMLParser = require('node-html-parser');
+const CryptoJS = require('crypto-js');
+const WebSocket = require('ws');
 
 // Constants
 const API_HOST = 'home.cielowigle.com';
@@ -708,4 +708,7 @@ class MrCoolHVAC {
     }
 }
 
-export {MrCoolHVAC, MrCoolAPIConnection};
+module.exports = {
+    MrCoolHVAC: MrCoolHVAC,
+    MrCoolAPIConnection: MrCoolAPIConnection
+};
