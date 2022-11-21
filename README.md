@@ -1,61 +1,51 @@
-# NodeJs interface for smartcielo remote AC control API (MRCOOL)
+# NodeJS Interface for MrCool Mini Splits
 
-by Nicholas Robinson
+by Isaac Webb
 
-[![mit license](https://badgen.net/badge/license/MIT/red)](https://github.com/nicholasrobinson/node-smartcielo/blob/master/LICENSE)
-[![npm](https://badgen.net/npm/v/node-smartcielo)](https://www.npmjs.com/package/node-smartcielo)
-[![npm](https://badgen.net/npm/dt/node-smartcielo)](https://www.npmjs.com/package/node-smartcielo)
+[![mit license](https://badgen.net/badge/license/MIT/red)](https://github.com/isaac-webb/node-mrcool/blob/master/LICENSE)
+[![npm](https://badgen.net/npm/v/node-mrcool)](https://www.npmjs.com/package/node-mrcool)
+[![npm](https://badgen.net/npm/dt/node-mrcool)](https://www.npmjs.com/package/node-mrcool)
 
 ## Overview
 
-This interace facilitates communication with AC equipment that is connected to the internet by smartcielo. This was specifically developed to facilitate automation of the MRCOOL DIY line of ACs.
+This interface facilitates communication with AC equipment that is connected to
+the internet by SmartCielo. This was specifically developed to facilitate
+automation of the MRCOOL DIY line of ACs.
+
+### Attribution
+
+The vast majority of this code is either directly from or largely based on the
+[`node-smartcielo`](https://github.com/nicholasrobinson/node-smartcielo) package
+by [Nicholas Robinson](https://github.com/nicholasrobinson). I forked the repo,
+updated/fixed the issues that prevented the package from working, and
+republished it.
 
 ## Installation
 
-    $ npm install node-smartcielo
-    
+```bash
+$ npm install node-mrcool
+``` 
+
 ## Usage
-
-### Simple Usage
-
-    const SmartCielo = require('node-smartcielo');
-    const hvac = new SmartCielo(<username>, <password>, <ip_address>);
-    hvac.sendPowerOn();
-    hvac.sendMode('cool');
-    hvac.sendTemperature(75);
-    hvac.sendFanSpeed('low');
-    console.log('Power:', hvac.getPower(), '| Mode:', hvac.getMode(), '| Fan Speed:', hvac.getFanSpeed(), '| Temperature:', hvac.getTemperature(), '| Room Temperature:', hvac.getRoomTemperature());
-    hvac.sendPowerOff()
 
 ### Sample Code Execution
 
-    $ node index.js -u <username> -p <password> -i <ip_address> [-v]
-    
-### Sample Code Output
-
-    Connecting...
-    Connected.
-    Current State: {"power":"off","temp":75,"mode":"auto","fanspeed":"auto","roomTemperature":75}
-    Sent Power On.
-    Current State: {"power":"on","temp":"75","mode":"auto","fanspeed":"auto","roomTemperature":83}
-    Sent Power Off.
-    Current State: {"power":"off","temp":"75","mode":"auto","fanspeed":"auto","roomTemperature":83}
-    Exiting...
+```bash
+$ node index.js -u <username> -p <password> -i <ip_address> [-v]
+```
 
 ## References
     
-* https://www.mrcool.com/
-* https://www.smartcielo.com
+* [https://www.mrcool.com/](MrCool)
+* [https://www.smartcielo.com](SmartCielo)
 
 ## Notes
 
-* The "-v" option will send all communications via an HTTP proxy running on localhost port 8888 for debugging.
+* The `-v` option will send all communications via an HTTP proxy running on
+  `localhost:8888` for debugging.
 
-Please let me know if you find this useful or come up with any novel implementations.
+Feel free to reach out with issues, fixes, improvements, or any questions.
 
-Enjoy!
+Best,
 
-Nicholas Robinson
-
-me@nicholassavilerobinson.com
-
+Isaac Webb

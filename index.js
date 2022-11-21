@@ -1,13 +1,14 @@
 /**
  * Includes
  */
-const commandLineArgs = require('command-line-args');
-const SmartCielo = require('./SmartCielo.js');
+import commandLineArgs from 'command-line-args';
+import {MrCoolHVAC, MrCoolAPIConnection} from './MrCool.js';
+import HttpsProxyAgent from 'https-proxy-agent';
+import url from 'url';
 
 /**
  * Constants
  */
-
 const OPTION_DEFINITIONS = [
     { name: 'username', alias: 'u', type: String },
     { name: 'password', alias: 'p', type: String },
@@ -19,8 +20,6 @@ const OPTIONS = commandLineArgs(OPTION_DEFINITIONS);
 /**
  * Debug Proxy Settings
  */
-const HttpsProxyAgent = require('https-proxy-agent');
-const url = require('url');
 const PROXY = 'http://127.0.0.1:8888';
 const agentOptions = url.parse(PROXY);
 const agent = OPTIONS.verbose ? new HttpsProxyAgent(agentOptions) : undefined;
@@ -31,7 +30,10 @@ if (agent) {
 /**
  * Example Usage.
  */
-const hvac = new SmartCielo(OPTIONS.username, OPTIONS.password, OPTIONS.ip,
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+const api = new MrCoolAPIConnection(
     commandedState => {
         console.log('Commanded State Change:', JSON.stringify(commandedState));
     },
@@ -40,29 +42,49 @@ const hvac = new SmartCielo(OPTIONS.username, OPTIONS.password, OPTIONS.ip,
     },
     err => {
         console.error('Communication Error:', err);
-    }, agent);
+    }
+);
 console.log('Connecting...');
-hvac.waitForConnection.then(_ => {
+try {
+    await api.establishConnection(OPTIONS.username, OPTIONS.password,
+        OPTIONS.ip, agent);
+    await api.subscribeToHVACs(['000000000000'])
+    
     console.log('Connected.');
-    console.log('Current State:', JSON.stringify(hvac.getState()));
-    hvac.sendPowerOn(_ => {
-        console.log('Sent Power On.');
-        setTimeout(() => {
-            console.log('Current State:', JSON.stringify(hvac.getState()));
-            hvac.sendPowerOff(_ => {
-                console.log('Sent Power Off.');
-                setTimeout(() => {
-                    console.log('Current State:', JSON.stringify(hvac.getState()));
-                    console.log('Exiting...');
-                    process.exit();
-                }, 1000);
-            }, err => {
-                console.error(err);
-            });
-        }, 10000);
-    }, err => {
-        console.error(err);
+    api.hvacs.forEach((hvac) => {
+        console.log(hvac.toString());
     });
-}, err => {
-    console.error(err);
-});
+    
+    const temp = api.hvacs[0].getTemperature();
+    
+    console.log('Sending power off');
+    await api.hvacs[0].powerOff(api);
+    await sleep(10000);
+    api.hvacs.forEach((hvac) => {
+        console.log(hvac.toString());
+    });
+    
+    console.log('Sending power on');
+    await api.hvacs[0].powerOn(api);
+    await sleep(10000);
+    api.hvacs.forEach((hvac) => {
+        console.log(hvac.toString());
+    });
+
+    console.log('Sending temperature 75');
+    await api.hvacs[0].setTemperature('75', api);
+    await sleep(10000);
+    api.hvacs.forEach((hvac) => {
+        console.log(hvac.toString());
+    });
+
+    console.log('Sending temperature ' + temp);
+    await api.hvacs[0].setTemperature(temp, api);
+    await sleep(10000);
+    api.hvacs.forEach((hvac) => {
+        console.log(hvac.toString());
+    });
+} catch (error) {
+    console.error("Caught an error...");
+    console.error(error);
+}
