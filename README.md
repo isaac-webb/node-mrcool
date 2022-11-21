@@ -36,8 +36,8 @@ $ node index.js -u <username> -p <password> -i <ip_address> [-v]
 
 ## References
     
-* [https://www.mrcool.com/](MrCool)
-* [https://www.smartcielo.com](SmartCielo)
+* [MrCool](https://www.mrcool.com/)
+* [SmartCielo](https://www.smartcielo.com)
 
 ## Notes
 
