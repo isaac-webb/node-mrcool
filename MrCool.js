@@ -640,6 +640,15 @@ class MrCoolHVAC {
     }
 
     /**
+     * Returns the device's name
+     * 
+     * @returns {string}
+     */
+    getDeviceName() {
+        return this.#deviceName;
+    }
+
+    /**
      * Returns a string representation containing state data
      * 
      * @returns {string}
